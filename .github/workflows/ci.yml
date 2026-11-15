@@ -1,0 +1,30 @@
+# Inline CI: a public repo can't call the private reusable workflow in `moody`.
+# Job names match the org ruleset's required checks.
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  build:
+    name: ci / build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate YAML templates
+        run: |
+          ruby -ryaml -e 'Dir["ISSUE_TEMPLATE/*.yml"].each { |f| YAML.load_file(f); puts "ok " + f }'
+      - name: Public repo guard (templates and profile only)
+        run: |
+          bad=$(git ls-files | grep -vE '^(README\.md|pull_request_template\.md|ISSUE_TEMPLATE/.+\.yml|profile/README\.md|\.github/workflows/ci\.yml)$' || true)
+          if [ -n "$bad" ]; then echo "Files not allowed in the public .github repo:"; echo "$bad"; exit 1; fi
+  secrets:
+    name: ci / secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --no-banner --redact --verbose
