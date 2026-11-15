@@ -1,0 +1,72 @@
+name: Work package
+description: A unit of build work for an agent session (build plan §1.3). No link, no build.
+title: "[N?/X?] "
+labels: ["work-package"]
+body:
+  - type: input
+    id: goal
+    attributes:
+      label: Goal
+      description: One sentence. What's true when this is done?
+    validations: { required: true }
+  - type: dropdown
+    id: serves
+    attributes:
+      label: Serves
+      description: Launch, a strategy bet (see the handbook) or a blueprint constraint. Anything else is labelled `later` and not built.
+      options:
+        - Launch
+        - A strategy bet (name it below)
+        - A blueprint constraint (name it below)
+    validations: { required: true }
+  - type: input
+    id: serves-detail
+    attributes:
+      label: Which bet or constraint?
+      description: e.g. "B2" or "C4". Leave blank for launch.
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Stage
+      options: [Now, Next]
+    validations: { required: true }
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope and out of scope
+    validations: { required: true }
+  - type: textarea
+    id: io
+    attributes:
+      label: Inputs and outputs
+      description: Files, data formats, APIs, interfaces with other packages.
+    validations: { required: true }
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable statements, one per line.
+    validations: { required: true }
+  - type: dropdown
+    id: risk
+    attributes:
+      label: Risk class
+      description: Highest risk class of any action this can take (blueprint §5.1).
+      options: ["R0 Read", "R1 Draft", "R2 Reversible external", "R3 Commit", "R4 Bind"]
+    validations: { required: true }
+  - type: textarea
+    id: tests
+    attributes:
+      label: Tests and evals
+      description: How each acceptance criterion is checked.
+    validations: { required: true }
+  - type: input
+    id: budget
+    attributes:
+      label: Budget
+      description: Expected running cost per month and per run, or "none".
+    validations: { required: true }
+  - type: input
+    id: depends
+    attributes:
+      label: Depends on
