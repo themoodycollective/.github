@@ -14,7 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Validate YAML templates
-        run: ruby -ryaml -e 'Dir["ISSUE_TEMPLATE/*.yml"].each { |f| YAML.load_file(f); puts "ok #{f}" }'
+        run: |
+          ruby -ryaml -e 'Dir["ISSUE_TEMPLATE/*.yml"].each { |f| YAML.load_file(f); puts "ok " + f }'
       - name: Public repo guard (templates and profile only)
         run: |
           bad=$(git ls-files | grep -vE '^(README\.md|pull_request_template\.md|ISSUE_TEMPLATE/.+\.yml|profile/README\.md|\.github/workflows/ci\.yml)$' || true)
